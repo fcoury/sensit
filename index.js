@@ -6,59 +6,19 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.static('public'));
 
-const data = [
-    {
-        "humidity": 59,
-        "temperature": 24,
-        "timestamp": "2017-11-07T00:42:23.017Z"
-    },
-    {
-        "humidity": 62,
-        "temperature": 23,
-        "timestamp": "2017-11-07T00:48:41.793Z"
-    },
-    {
-        "humidity": 62,
-        "temperature": 23,
-        "timestamp": "2017-11-07T00:49:33.969Z"
-    },
-    {
-        "humidity": 61,
-        "temperature": 23,
-        "timestamp": "2017-11-07T00:50:36.304Z"
-    },
-    {
-        "humidity": 60,
-        "temperature": 23,
-        "timestamp": "2017-11-07T00:52:44.743Z"
-    },
-    {
-        "humidity": 59,
-        "temperature": 23,
-        "timestamp": "2017-11-07T00:53:47.009Z"
-    },
-    {
-        "humidity": 59,
-        "temperature": 23,
-        "timestamp": "2017-11-07T00:54:49.427Z"
-    },
-    {
-        "humidity": 59,
-        "temperature": 23,
-        "timestamp": "2017-11-07T00:55:51.792Z"
-    },
-    {
-        "humidity": 60,
-        "temperature": 23,
-        "timestamp": "2017-11-07T00:56:54.079Z"
-    },
-    {
-        "humidity": 59,
-        "temperature": 23,
-        "timestamp": "2017-11-07T00:57:56.387Z"
-    }
-];
+app.set('view engine', 'ejs');
+
+const data = [{
+  timestamp: "2017-11-07T12:13:06.554Z",
+  temperature: 22,
+  humidity: 72
+}, {
+  timestamp: "2017-11-07T12:33:06.554Z",
+  temperature: 21,
+  humidity: 68
+}];
 
 app.post('/reset', (req, res) => {
   data.splice(0, data.length);
@@ -72,6 +32,12 @@ app.post('/', (req, res) => {
 });
 
 app.get('/', (req, res) => {
+  const lastData = data[data.length-1];
+  const { timestamp, temperature, humidity } = lastData;
+  res.render('index', { timestamp, temperature, humidity, data });
+});
+
+app.get('/data', (req, res) => {
   res.json(data);
 });
 
