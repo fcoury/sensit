@@ -7,6 +7,11 @@ app.use(bodyParser.json());
 
 const data = [];
 
+app.post('/reset', (req, res) => {
+  data.splice(0, data.length);
+  res.json({ ok: true });
+});
+
 app.post('/', (req, res) => {
   const entry = { timestamp: new Date(), ...req.body };
   data.push(entry);
