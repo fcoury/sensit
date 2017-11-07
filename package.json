@@ -5,6 +5,7 @@
   "license": "MIT",
   "dependencies": {
     "body-parser": "false1.18.2",
+    "cors": "false2.8.4",
     "express": "false4.16.2"
   },
   "scripts": {
