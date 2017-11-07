@@ -1,0 +1,20 @@
+{
+  "name": "sensit",
+  "version": "0.1.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "false1.18.2",
+    "express": "false4.16.2"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "start:dev": "nodemon index.js"
+  },
+  "devDependencies": {
+    "nodemon": "false1.12.1"
+  },
+  "engines": {
+    "node": "8.9.x"
+  }
+}
