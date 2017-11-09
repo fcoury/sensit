@@ -11,15 +11,7 @@ app.use(bodyParser.json());
 
 app.set('view engine', 'ejs');
 
-const data = [{
-  timestamp: "2017-11-07T12:13:06.554Z",
-  temperature: 22,
-  humidity: 72
-}, {
-  timestamp: "2017-11-07T12:33:06.554Z",
-  temperature: 21,
-  humidity: 68
-}];
+const data = [];
 
 app.post('/reset', (req, res) => {
   data.splice(0, data.length);
