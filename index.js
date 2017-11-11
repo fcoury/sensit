@@ -54,7 +54,7 @@ const getData = (callback) => {
 
   client.connect((error, client, done) => {
     if (error) {
-      console.log(error);
+      console.error(error);
       return callback(error, null);
     }
 
@@ -79,7 +79,6 @@ app.get('/', (req, res) => {
       console.error(error);
       return res.status(500).json({ ok: false, error });
     }
-    console.log('res.rows', r.rows);
     const lastData = r.rows[0];
     if (lastData) {
       const { timestamp, temperature, humidity } = lastData;
