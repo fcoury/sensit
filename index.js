@@ -23,7 +23,12 @@ app.post('/reset', (req, res) => {
 
 app.post('/', (req, res) => {
   const entry = { timestamp: new Date(), ...req.body };
-  pool.connect((err, client, done) => {
+  pool.connect((error, client, done) => {
+    if (error) {
+      console.error(error);
+      return res.status(500).json({ ok: false, error });
+    }
+
     const query = 'INSERT INTO entries (timestamp, humidity, temperature) RETURNING *';
     const values = [new Date(), req.body.humidity, req.body.temperature];
     client.query(query, values, (error, res) => {
@@ -38,7 +43,11 @@ app.post('/', (req, res) => {
 });
 
 const getData = (callback) => {
-  pool.connect((err, client, done) => {
+  pool.connect((error, client, done) => {
+    if (error) {
+      return callback(error, null);
+    }
+
     const query = `
       SELECT
         timestamp, humidity, temperature
