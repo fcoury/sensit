@@ -46,7 +46,7 @@ app.post('/', (req, res) => {
   });
 });
 
-const getData = (callback) => {
+const getData = (params, callback) => {
   const client = new Client({
     connectionString: process.env.DATABASE_URL,
     // ssl: true,
@@ -65,7 +65,7 @@ const getData = (callback) => {
         entries
       ORDER BY
         timestamp DESC
-      LIMIT 120`;
+      LIMIT ${params.limit || 60}`;
     client.query(query, [], (error, r) => {
       client.end();
       callback(error, r);
@@ -74,7 +74,7 @@ const getData = (callback) => {
 };
 
 app.get('/', (req, res) => {
-  getData((error, r) => {
+  getData(req.query, (error, r) => {
     if (error) {
       console.error(error);
       return res.status(500).json({ ok: false, error });
@@ -91,7 +91,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/data', (req, res) => {
-  getData((error, r) => {
+  getData(req.query, (error, r) => {
     res.json(r.rows);
   });
 });

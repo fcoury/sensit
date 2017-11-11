@@ -7,23 +7,28 @@ function convert(row) {
   };
 }
 
-function renderChart(data) {
+const colors = {
+  temperature: '#0000ff',
+  humidity: '#ff0000',
+};
+
+function renderChart(datapoint, data) {
   var x = ['x'];
-  var temperature = ['temperature'];
-  var humidity = ['humidity'];
+  var series = [datapoint];
 
   data.forEach(function(r) {
     var row = convert(r);
     x.push(row.timestamp);
-    temperature.push(row.temperature);
-    humidity.push(row.humidity);
+    series.push(row[datapoint]);
   });
 
   return c3.generate({
+    bindto: `#${datapoint}`,
+    color: { pattern: [colors[datapoint]] },
     data: {
       x: 'x',
       xFormat: '%Y-%m-%d %H:%M:%S',
-      columns: [x, temperature, humidity],
+      columns: [x, series],
     },
     axis: {
       x: {

@@ -29,14 +29,16 @@
       </div>
 
       <div class="row">
-        <div id="chart"></div>
+        <div id="temperature"></div>
+        <div id="humidity"></div>
       </div>
       <%- include('partials/footer') %>
   </div>
 
   <script src="/assets/index.js"></script>
   <script>
-    renderChart(<%- JSON.stringify(data) %>);
+    renderChart('temperature', <%- JSON.stringify(data) %>);
+    renderChart('humidity', <%- JSON.stringify(data) %>);
   </script>
 </body>
 
