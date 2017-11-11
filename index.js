@@ -5,7 +5,6 @@ const path = require('path');
 const app = express();
 
 const { Client, Pool } = require('pg');
-const pool = new Pool();
 
 app.use('/assets', express.static(path.join(__dirname, 'public')));
 app.use(cors());
@@ -22,29 +21,40 @@ app.post('/reset', (req, res) => {
 });
 
 app.post('/', (req, res) => {
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    // ssl: true,
+  });
+
   const entry = req.body;
-  pool.connect((error, client, done) => {
+  client.connect((error, _client) => {
     if (error) {
       console.error('Error on connect', error);
       return res.status(500).json({ ok: false, error });
     }
 
-    const query = 'INSERT INTO entries (timestamp, humidity, temperature) RETURNING *';
-    const values = [new Date(), req.body.humidity, req.body.temperature];
-    client.query(query, values, (error, res) => {
-      done();
+    const query = 'INSERT INTO entries (humidity, temperature) VALUES ($1, $2) RETURNING *';
+    const values = [req.body.humidity, req.body.temperature];
+    client.query(query, values, (error, r) => {
+      client.end();
       if (error) {
         console.error('Error on insert', error);
         return res.status(500).json({ ok: false, error });
       }
-      res.json({ ok: true, ...res[0] });
+      res.json({ ok: true, ...r.rows[0] });
     })
   });
 });
 
 const getData = (callback) => {
-  pool.connect((error, client, done) => {
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    // ssl: true,
+  });
+
+  client.connect((error, client, done) => {
     if (error) {
+      console.log(error);
       return callback(error, null);
     }
 
@@ -57,7 +67,7 @@ const getData = (callback) => {
         timestamp DESC
       LIMIT 120`;
     client.query(query, [], (error, r) => {
-      done();
+      client.end();
       callback(error, r);
     });
   });
