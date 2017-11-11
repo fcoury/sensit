@@ -22,10 +22,10 @@ app.post('/reset', (req, res) => {
 });
 
 app.post('/', (req, res) => {
-  const entry = { timestamp: new Date(), ...req.body };
+  const entry = req.body;
   pool.connect((error, client, done) => {
     if (error) {
-      console.error(error);
+      console.error('Error on connect', error);
       return res.status(500).json({ ok: false, error });
     }
 
@@ -34,7 +34,7 @@ app.post('/', (req, res) => {
     client.query(query, values, (error, res) => {
       done();
       if (error) {
-        console.error(error);
+        console.error('Error on insert', error);
         return res.status(500).json({ ok: false, error });
       }
       res.json({ ok: true, ...res[0] });
