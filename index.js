@@ -63,9 +63,11 @@ const getData = (params, callback) => {
         timestamp, humidity, temperature
       FROM
         entries
+      WHERE
+        timestamp >= NOW() - INTERVAL '${params.hours || 6} hours'
       ORDER BY
         timestamp DESC
-      LIMIT ${params.limit || 60}`;
+    `;
     client.query(query, [], (error, r) => {
       client.end();
       callback(error, r);
